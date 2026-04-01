@@ -6,7 +6,7 @@
 /*   By: ael-bakk <ael-bakk@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/21 17:40:36 by ael-bakk          #+#    #+#             */
-/*   Updated: 2026/04/01 10:45:13 by ael-bakk         ###   ########.fr       */
+/*   Updated: 2026/04/01 11:24:20 by ael-bakk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -119,7 +119,7 @@ void						sleep_ms(long ms);
 
 // log.c
 void						log_message(t_simulation *sim, t_coder *coder,
-								const char *message);
+								char *message);
 void						log_taken_dongle(t_simulation *sim, t_coder *coder);
 void						log_compiling(t_simulation *sim, t_coder *coder);
 void						log_debugging(t_simulation *sim, t_coder *coder);
@@ -132,5 +132,9 @@ int							init_simulation(t_simulation *sim, int argc,
 
 // coder.c
 void						*coder_thread(void *arg);
+
+// dongle.c
+void						release_dongles(t_coder *coder);
+void						wait_for_dongles(t_coder *coder);
 
 #endif
