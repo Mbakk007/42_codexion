@@ -6,7 +6,7 @@
 /*   By: ael-bakk <ael-bakk@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/01 13:34:00 by ael-bakk          #+#    #+#             */
-/*   Updated: 2026/04/01 16:30:08 by ael-bakk         ###   ########.fr       */
+/*   Updated: 2026/04/02 00:34:29 by ael-bakk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,6 @@
 void	monitor_simulation(t_simulation *sim)
 {
 	int		i;
-	long	current_time;
 
 	while (1)
 	{
@@ -35,8 +34,7 @@ void	monitor_simulation(t_simulation *sim)
 		i = 0;
 		while (i < sim->params.number_of_coders)
 		{
-			current_time = get_elapsed_ms(sim);
-			if (current_time >= sim->coders[i].deadline
+			if (get_elapsed_ms(sim) >= sim->coders[i].deadline
 				&& sim->coders[i].state != BURNED_OUT)
 			{
 				pthread_mutex_lock(&sim->state_mutex);

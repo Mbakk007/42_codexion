@@ -6,7 +6,7 @@
 /*   By: ael-bakk <ael-bakk@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/01 10:53:32 by ael-bakk          #+#    #+#             */
-/*   Updated: 2026/04/01 16:27:55 by ael-bakk         ###   ########.fr       */
+/*   Updated: 2026/04/02 00:26:53 by ael-bakk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 static void	start_compiling(t_coder *coder);
 static void	start_debugging(t_coder *coder);
 static void	start_refactoring(t_coder *coder);
+static int	stop_check(t_simulation *sim);
 
 void	*coder_thread(void *arg)
 {
@@ -25,33 +26,30 @@ void	*coder_thread(void *arg)
 	sim = coder->left_dongle->sim;
 	while (sim->simulation_running)
 	{
-		pthread_mutex_lock(&sim->state_mutex);
-		if (sim->someone_burned_out || sim->all_done)
-		{
-			pthread_mutex_unlock(&sim->state_mutex);
+		if (stop_check(sim))
 			break ;
-		}
-		pthread_mutex_unlock(&sim->state_mutex);
 		wait_for_dongles(coder);
 		start_compiling(coder);
-		pthread_mutex_lock(&sim->state_mutex);
-		if (sim->someone_burned_out || sim->all_done)
-		{
-			pthread_mutex_unlock(&sim->state_mutex);
+		if (stop_check(sim))
 			break ;
-		}
-		pthread_mutex_unlock(&sim->state_mutex);
 		start_debugging(coder);
-		pthread_mutex_lock(&sim->state_mutex);
-		if (sim->someone_burned_out || sim->all_done)
-		{
-			pthread_mutex_unlock(&sim->state_mutex);
+		if (stop_check(sim))
 			break ;
-		}
-		pthread_mutex_unlock(&sim->state_mutex);
 		start_refactoring(coder);
 	}
 	return (NULL);
+}
+
+static int	stop_check(t_simulation *sim)
+{
+	int	stop;
+
+	stop = 0;
+	pthread_mutex_lock(&sim->state_mutex);
+	if (sim->someone_burned_out || sim->all_done)
+		stop = 1;
+	pthread_mutex_unlock(&sim->state_mutex);
+	return (stop);
 }
 
 // Simulate compiling
