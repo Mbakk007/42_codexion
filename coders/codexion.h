@@ -6,7 +6,7 @@
 /*   By: ael-bakk <ael-bakk@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/21 17:40:36 by ael-bakk          #+#    #+#             */
-/*   Updated: 2026/03/31 15:30:00 by ael-bakk         ###   ########.fr       */
+/*   Updated: 2026/04/01 10:45:13 by ael-bakk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@
 # include <stdio.h>
 # include <stdlib.h>
 # include <string.h>
-# include <time.h>
+# include <sys/time.h>
 # include <unistd.h>
 
 typedef struct s_simulation	t_simulation;
