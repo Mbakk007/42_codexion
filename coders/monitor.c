@@ -6,7 +6,7 @@
 /*   By: ael-bakk <ael-bakk@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/02 17:11:40 by ael-bakk          #+#    #+#             */
-/*   Updated: 2026/04/02 19:23:31 by ael-bakk         ###   ########.fr       */
+/*   Updated: 2026/04/02 21:33:17 by ael-bakk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,15 +37,18 @@ static int	check_burnout(t_sim *sim, int *out_id)
 	int		i;
 	long	now;
 	long	last;
+	int		done;
 
-	now = now_ms();
+	now = sim_time_ms(sim);
 	i = 0;
 	while (i < sim->params.n_coders)
 	{
 		pthread_mutex_lock(&sim->coders[i].state_mtx);
 		last = sim->coders[i].last_compile_start_ms;
+		done = (sim->params.must_compile_count > 0
+				&& sim->coders[i].compile_count >= sim->params.must_compile_count);
 		pthread_mutex_unlock(&sim->coders[i].state_mtx);
-		if (now - last >= sim->params.t_burnout)
+		if (!done && now - last >= sim->params.t_burnout)
 		{
 			*out_id = sim->coders[i].id;
 			return (1);
@@ -70,11 +73,9 @@ void	*monitor_routine(void *arg)
 		}
 		if (check_burnout(sim, &burned_id))
 		{
-			/* IMPORTANT: this message must print even if we stop right after */
 			pthread_mutex_lock(&sim->print_mtx);
 			printf("%ld %d %s\n", sim_time_ms(sim), burned_id, "burned out");
 			pthread_mutex_unlock(&sim->print_mtx);
-
 			sim_request_stop(sim);
 			return (NULL);
 		}

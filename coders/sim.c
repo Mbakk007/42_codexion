@@ -6,7 +6,7 @@
 /*   By: ael-bakk <ael-bakk@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/02 15:53:54 by ael-bakk          #+#    #+#             */
-/*   Updated: 2026/04/02 19:43:27 by ael-bakk         ###   ########.fr       */
+/*   Updated: 2026/04/02 21:33:28 by ael-bakk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,16 +76,15 @@ int	sim_run(t_sim *sim)
 	i = 0;
 	while (i < sim->params.n_coders)
 	{
-		if (pthread_create(&sim->coders[i].thread, NULL,
-				&coder_routine, &sim->coders[i]) != 0)
+		if (pthread_create(&sim->coders[i].thread, NULL, &coder_routine,
+				&sim->coders[i]) != 0)
 		{
 			sim_request_stop(sim);
 			break ;
 		}
 		i++;
 	}
-	if (pthread_create(&sim->monitor_thread, NULL,
-			&monitor_routine, sim) != 0)
+	if (pthread_create(&sim->monitor_thread, NULL, &monitor_routine, sim) != 0)
 		sim_request_stop(sim);
 	while (i > 0)
 	{

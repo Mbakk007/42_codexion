@@ -6,7 +6,7 @@
 /*   By: ael-bakk <ael-bakk@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/01 10:53:32 by ael-bakk          #+#    #+#             */
-/*   Updated: 2026/04/02 19:32:50 by ael-bakk         ###   ########.fr       */
+/*   Updated: 2026/04/02 21:32:58 by ael-bakk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,11 +31,8 @@ static int	coder_cycle(t_coder *c)
 	if (sim_should_stop(c->sim) || reached_quota(c))
 		return (dongles_release_two(c), 0);
 	pthread_mutex_lock(&c->state_mtx);
-	c->last_compile_start_ms = now_ms();
+	c->last_compile_start_ms = sim_time_ms(c->sim);
 	pthread_mutex_unlock(&c->state_mtx);
-	pthread_mutex_lock(&c->sim->sched_mtx);
-	pthread_cond_broadcast(&c->sim->sched_cond);
-	pthread_mutex_unlock(&c->sim->sched_mtx);
 	log_event(c->sim, c->id, "is compiling");
 	ms_sleep(c->sim, c->sim->params.t_compile);
 	pthread_mutex_lock(&c->state_mtx);
@@ -55,7 +52,7 @@ static int	coder_cycle(t_coder *c)
 
 void	*coder_routine(void *arg)
 {
-	t_coder	*c;
+	t_coder *c;
 
 	c = (t_coder *)arg;
 	while (!sim_should_stop(c->sim) && !reached_quota(c))

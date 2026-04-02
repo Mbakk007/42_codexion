@@ -6,7 +6,7 @@
 /*   By: ael-bakk <ael-bakk@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/02 17:53:23 by ael-bakk          #+#    #+#             */
-/*   Updated: 2026/04/02 18:50:47 by ael-bakk         ###   ########.fr       */
+/*   Updated: 2026/04/02 21:33:20 by ael-bakk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,13 +36,20 @@ void	queue_destroy(t_sim *sim)
 
 int	queue_push(t_sim *sim, int coder_id)
 {
-	long	now;
+	int	i;
 
+	/* already queued? don't add a duplicate */
+	i = 0;
+	while (i < sim->queue->len)
+	{
+		if (sim->queue->requests[i].coder_id == coder_id)
+			return (1);
+		i++;
+	}
 	if (sim->queue->len >= sim->queue->cap)
 		return (0);
-	now = now_ms();
 	sim->queue->requests[sim->queue->len].coder_id = coder_id;
-	sim->queue->requests[sim->queue->len].arrival_ms = now;
+	sim->queue->requests[sim->queue->len].arrival_key = sim->next_arrival_key++;
 	sim->queue->len++;
 	return (1);
 }
@@ -56,7 +63,11 @@ void	queue_remove(t_sim *sim, int coder_id)
 	{
 		if (sim->queue->requests[i].coder_id == coder_id)
 		{
-			sim->queue->requests[i] = sim->queue->requests[sim->queue->len - 1];
+			while (i + 1 < sim->queue->len)
+			{
+				sim->queue->requests[i] = sim->queue->requests[i + 1];
+				i++;
+			}
 			sim->queue->len--;
 			return ;
 		}
@@ -66,24 +77,24 @@ void	queue_remove(t_sim *sim, int coder_id)
 
 int	queue_pick_winner(t_sim *sim)
 {
-	int		i;
-	int		best;
-	long	best_key;
-	long	key;
+	int			i;
+	int			best;
+	long		best_key;
+	long		key;
 	t_request	*r;
 
 	if (sim->queue->len <= 0)
 		return (-1);
 	best = 0;
 	r = &sim->queue->requests[0];
-	best_key = scheduler_key_ms(sim, r->coder_id, r->arrival_ms);
+	best_key = scheduler_key_ms(sim, r->coder_id, r->arrival_key);
 	i = 1;
 	while (i < sim->queue->len)
 	{
 		r = &sim->queue->requests[i];
-		key = scheduler_key_ms(sim, r->coder_id, r->arrival_ms);
+		key = scheduler_key_ms(sim, r->coder_id, r->arrival_key);
 		if (key < best_key || (key == best_key
-				&& r->arrival_ms < sim->queue->requests[best].arrival_ms))
+				&& r->arrival_key < sim->queue->requests[best].arrival_key))
 			best_key = key, best = i;
 		i++;
 	}
