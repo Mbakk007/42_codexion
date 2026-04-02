@@ -6,7 +6,7 @@
 /*   By: ael-bakk <ael-bakk@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/31 20:47:02 by ael-bakk          #+#    #+#             */
-/*   Updated: 2026/04/02 17:06:18 by ael-bakk         ###   ########.fr       */
+/*   Updated: 2026/04/02 19:32:06 by ael-bakk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ long	sim_time_ms(t_sim *sim)
 	return (now_ms() - sim->start_ms);
 }
 
-void	ms_sleep(long ms)
+void	ms_sleep(t_sim *sim, long ms)
 {
 	long	start;
 	long	now;
@@ -34,7 +34,7 @@ void	ms_sleep(long ms)
 	if (ms <= 0)
 		return ;
 	start = now_ms();
-	while (1)
+	while (!sim_should_stop(sim))
 	{
 		now = now_ms();
 		if (now - start >= ms)
@@ -45,3 +45,4 @@ void	ms_sleep(long ms)
 			usleep(100);
 	}
 }
+

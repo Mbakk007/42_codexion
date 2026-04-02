@@ -6,7 +6,7 @@
 /*   By: ael-bakk <ael-bakk@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/21 17:40:36 by ael-bakk          #+#    #+#             */
-/*   Updated: 2026/04/02 17:53:08 by ael-bakk         ###   ########.fr       */
+/*   Updated: 2026/04/02 19:33:25 by ael-bakk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,8 +22,20 @@
 # include <unistd.h>
 
 typedef struct s_sim t_sim;
-typedef struct s_queue	t_queue;
 typedef struct s_dongle	t_dongle;
+
+typedef struct s_request
+{
+	int		coder_id;
+	long	arrival_ms;
+}	t_request;
+
+typedef struct s_queue
+{
+	t_request	*requests;
+	int		len;
+	int		cap;
+}	t_queue;
 
 typedef enum e_sched
 {
@@ -63,8 +75,17 @@ typedef struct s_sim
 	pthread_t		monitor_thread;
 	t_coder			*coders;
 	t_queue 		*queue;
-	t_dongle		*dongle;
+	t_dongle		*dongles;
+	pthread_mutex_t sched_mtx;
+	pthread_cond_t		sched_cond;
 }					t_sim;
+
+typedef struct s_dongle
+{
+	pthread_mutex_t	mtx;
+	long			available_at_ms;
+}	t_dongle;
+
 
 // args.c
 int					parse_n_coders(int *out, const char *s);
@@ -89,7 +110,7 @@ int					sim_run(t_sim *sim);
 // time.c
 long				now_ms(void);
 long				sim_time_ms(t_sim *sim);
-void				ms_sleep(long ms);
+void	ms_sleep(t_sim *sim, long ms);
 
 // log.c
 void				log_event(t_sim *sim, int coder_id, const char *msg);
@@ -111,12 +132,18 @@ void				sim_resources_destroy(t_sim *sim);
 // queue.c
 int		queue_init(t_sim *sim);
 void	queue_destroy(t_sim *sim);
+int		queue_push(t_sim *sim, int coder_id);
+void	queue_remove(t_sim *sim, int coder_id);
+int		queue_pick_winner(t_sim *sim);
 
 // dongle.c
-int		dongle_init(t_sim *sim);
-void	dongle_destroy(t_sim *sim);
+int		dongles_init(t_sim *sim);
+void	dongles_destroy(t_sim *sim);
+int		dongles_take_two(t_coder *c);
+void	dongles_release_two(t_coder *c);
 
 // scheduler.c
 int		scheduler_init(t_sim *sim);
 void	scheduler_destroy(t_sim *sim);
+long	scheduler_key_ms(t_sim *sim, int coder_id, long arrival_ms);
 #endif

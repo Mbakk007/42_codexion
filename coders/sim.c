@@ -6,7 +6,7 @@
 /*   By: ael-bakk <ael-bakk@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/02 15:53:54 by ael-bakk          #+#    #+#             */
-/*   Updated: 2026/04/02 17:24:40 by ael-bakk         ###   ########.fr       */
+/*   Updated: 2026/04/02 19:43:27 by ael-bakk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,6 +54,9 @@ void	sim_request_stop(t_sim *sim)
 	pthread_mutex_lock(&sim->stop_mtx);
 	sim->stop = 1;
 	pthread_mutex_unlock(&sim->stop_mtx);
+	pthread_mutex_lock(&sim->sched_mtx);
+	pthread_cond_broadcast(&sim->sched_cond);
+	pthread_mutex_unlock(&sim->sched_mtx);
 }
 
 int	sim_should_stop(t_sim *sim)
@@ -70,10 +73,6 @@ int	sim_run(t_sim *sim)
 {
 	int	i;
 
-	if (pthread_create(&sim->monitor_thread, NULL,
-			&monitor_routine, sim) != 0)
-		return (0);
-
 	i = 0;
 	while (i < sim->params.n_coders)
 	{
@@ -85,6 +84,9 @@ int	sim_run(t_sim *sim)
 		}
 		i++;
 	}
+	if (pthread_create(&sim->monitor_thread, NULL,
+			&monitor_routine, sim) != 0)
+		sim_request_stop(sim);
 	while (i > 0)
 	{
 		i--;
