@@ -6,7 +6,7 @@
 /*   By: ael-bakk <ael-bakk@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/02 17:53:43 by ael-bakk          #+#    #+#             */
-/*   Updated: 2026/04/03 10:39:56 by ael-bakk         ###   ########.fr       */
+/*   Updated: 2026/04/03 11:15:52 by ael-bakk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,6 @@ long	scheduler_key_ms(t_sim *sim, int coder_id, long arrival_key)
 
 	if (sim->params.scheduler == FIFO)
 		return (arrival_key);
-	/* EDF: MUST lock to read last_compile_start_ms (data race otherwise) */
 	pthread_mutex_lock(&sim->coders[coder_id - 1].state_mtx);
 	last = sim->coders[coder_id - 1].last_compile_start_ms;
 	pthread_mutex_unlock(&sim->coders[coder_id - 1].state_mtx);

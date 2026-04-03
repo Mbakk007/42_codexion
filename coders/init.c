@@ -6,7 +6,7 @@
 /*   By: ael-bakk <ael-bakk@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/02 17:23:27 by ael-bakk          #+#    #+#             */
-/*   Updated: 2026/04/03 10:48:50 by ael-bakk         ###   ########.fr       */
+/*   Updated: 2026/04/03 11:16:49 by ael-bakk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 int	sim_resources_init(t_sim *sim)
 {
 	int	i;
-	int j;
+	int	j;
 
 	if (!queue_init(sim) || !dongles_init(sim) || !scheduler_init(sim))
 		return (0);
@@ -58,7 +58,7 @@ void	sim_resources_destroy(t_sim *sim)
 int	dongles_init(t_sim *sim)
 {
 	int	i;
-	int j;
+	int	j;
 
 	sim->dongles = malloc(sizeof(t_dongle) * sim->params.n_coders);
 	if (!sim->dongles)

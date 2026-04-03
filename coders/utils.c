@@ -6,7 +6,7 @@
 /*   By: ael-bakk <ael-bakk@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/02 15:35:39 by ael-bakk          #+#    #+#             */
-/*   Updated: 2026/04/02 21:33:33 by ael-bakk         ###   ########.fr       */
+/*   Updated: 2026/04/03 11:12:30 by ael-bakk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,8 +68,8 @@ int	ft_atoi(const char *s)
 
 long	ft_atol(const char *s)
 {
-	long sign;
-	long n;
+	long	sign;
+	long	n;
 
 	sign = 1;
 	n = 0;

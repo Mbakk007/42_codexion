@@ -6,7 +6,7 @@
 /*   By: ael-bakk <ael-bakk@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/02 17:53:23 by ael-bakk          #+#    #+#             */
-/*   Updated: 2026/04/03 10:40:18 by ael-bakk         ###   ########.fr       */
+/*   Updated: 2026/04/03 11:15:45 by ael-bakk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,6 @@ int	queue_push(t_sim *sim, int coder_id)
 {
 	int	i;
 
-	/* already queued? don't add a duplicate */
 	i = 0;
 	while (i < sim->queue->len)
 	{
@@ -82,7 +81,10 @@ int	queue_pick_winner(t_sim *sim)
 		key = scheduler_key_ms(sim, r->coder_id, r->arrival_key);
 		if (key < best_key || (key == best_key
 				&& r->arrival_key < sim->queue->requests[best].arrival_key))
-			best_key = key, best = i;
+		{
+			best_key = key;
+			best = i;
+		}
 		i++;
 	}
 	return (best);

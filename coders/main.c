@@ -6,11 +6,23 @@
 /*   By: ael-bakk <ael-bakk@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/02 15:17:50 by ael-bakk          #+#    #+#             */
-/*   Updated: 2026/04/03 09:51:12 by ael-bakk         ###   ########.fr       */
+/*   Updated: 2026/04/03 11:26:45 by ael-bakk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "codexion.h"
+
+static void	print_usage(void)
+{
+	write(2, "Usage: ./codexion n_coders t_burnout t_compile t_debug", 54);
+	write(2, " t_refactor must_compile dongle_cooldown fifo|edf\n", 53);
+}
+
+static void	print_error(void)
+{
+	write(2, "Error: invalid arguments (numbers must be > 0", 45);
+	write(2, "scheduler must be fifo|edf)\n", 29);
+}
 
 int	main(int argc, char **argv)
 {
@@ -19,21 +31,16 @@ int	main(int argc, char **argv)
 
 	if (argc != 9)
 	{
-		write(2,
-			"Usage: ./codexion n_coders t_burnout t_compile t_debug t_refactor must_compile dongle_cooldown fifo|edf\n",
-			102);
+		print_usage();
 		return (1);
 	}
 	if (!parse_args(&p, argc, argv))
 	{
-		write(2, "Error: invalid arguments (numbers must be >0, scheduler must be fifo|edf)\n", 74);
+		print_error();
 		return (1);
 	}
 	if (!sim_init(&sim, &p))
-	{
-		write(2, "Error: sim_init failed\n", 23);
 		return (1);
-	}
 	if (!sim_run(&sim))
 	{
 		write(2, "Error: simulation failed\n", 25);

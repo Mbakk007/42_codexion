@@ -6,7 +6,7 @@
 /*   By: ael-bakk <ael-bakk@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/01 10:53:32 by ael-bakk          #+#    #+#             */
-/*   Updated: 2026/04/03 10:09:10 by ael-bakk         ###   ########.fr       */
+/*   Updated: 2026/04/03 11:18:13 by ael-bakk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,14 +55,15 @@ static int	coder_cycle(t_coder *c)
 
 void	*coder_routine(void *arg)
 {
-	t_coder	*c = (t_coder *)arg;
+	t_coder	*c;
 
+	c = (t_coder *)arg;
 	while (!sim_should_stop(c->sim))
 	{
-    	if (!coder_cycle(c))
-        	break ;
-    	if (reached_quota(c))
-        	break ;
+		if (!coder_cycle(c))
+			break ;
+		if (reached_quota(c))
+			break ;
 	}
 	return (NULL);
 }

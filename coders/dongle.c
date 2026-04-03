@@ -6,7 +6,7 @@
 /*   By: ael-bakk <ael-bakk@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/02 20:45:01 by ael-bakk          #+#    #+#             */
-/*   Updated: 2026/04/03 10:38:49 by ael-bakk         ###   ########.fr       */
+/*   Updated: 2026/04/03 11:27:57 by ael-bakk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,16 +30,15 @@ void	dongles_destroy(t_sim *sim)
 
 int	dongles_take_two(t_coder *c)
 {
-	int				left, right;
 	int				win;
-	long			min_avail, now, a_avail, b_avail, now_ms_value;
 	struct timespec	timestamp;
 	int				ret;
-	int				a, b;
 
+	int left, right;
+	long min_avail, now, a_avail, b_avail, now_ms_value;
+	int a, b;
 	left = c->id - 1;
 	right = c->id % c->sim->params.n_coders;
-
 	pthread_mutex_lock(&c->sim->sched_mtx);
 	if (!queue_push(c->sim, c->id))
 	{
@@ -72,7 +71,6 @@ int	dongles_take_two(t_coder *c)
 			}
 			else
 			{
-				/* Always lock in index order to avoid deadlocks */
 				if (left < right)
 				{
 					a = left;
@@ -114,7 +112,8 @@ int	dongles_take_two(t_coder *c)
 				min_avail = now + 1;
 			timestamp.tv_sec = min_avail / 1000;
 			timestamp.tv_nsec = (min_avail % 1000) * 1000000;
-			ret = pthread_cond_timedwait(&c->sim->sched_cond, &c->sim->sched_mtx, &timestamp);
+			ret = pthread_cond_timedwait(&c->sim->sched_cond,
+					&c->sim->sched_mtx, &timestamp);
 			(void)ret;
 			continue ;
 		}
@@ -127,14 +126,13 @@ int	dongles_take_two(t_coder *c)
 
 void	dongles_release_two(t_coder *c)
 {
-	int left;
-	int right;
-	long next;
+	int		left;
+	int		right;
+	long	next;
 
 	left = c->id - 1;
 	right = c->id % c->sim->params.n_coders;
 	next = now_ms() + c->sim->params.dongle_cooldown;
-
 	if (left == right)
 	{
 		c->sim->dongles[left].available_at_ms = next;
@@ -144,7 +142,6 @@ void	dongles_release_two(t_coder *c)
 	{
 		c->sim->dongles[left].available_at_ms = next;
 		pthread_mutex_unlock(&c->sim->dongles[left].mtx);
-
 		c->sim->dongles[right].available_at_ms = next;
 		pthread_mutex_unlock(&c->sim->dongles[right].mtx);
 	}

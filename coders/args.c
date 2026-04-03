@@ -6,7 +6,7 @@
 /*   By: ael-bakk <ael-bakk@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/22 11:03:45 by ael-bakk          #+#    #+#             */
-/*   Updated: 2026/04/02 17:01:26 by ael-bakk         ###   ########.fr       */
+/*   Updated: 2026/04/03 11:16:11 by ael-bakk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,7 @@ int	parse_n_coders(int *out, const char *s)
 	*out = v;
 	return (1);
 }
+
 int	parse_pos_long(long *out, const char *s)
 {
 	long	v;
@@ -63,6 +64,7 @@ int	parse_args(t_params *p, int argc, char **argv)
 		return (0);
 	return (1);
 }
+
 int	parse_pos_int(int *out, const char *s)
 {
 	int	v;

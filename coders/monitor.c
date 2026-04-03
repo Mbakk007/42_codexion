@@ -6,7 +6,7 @@
 /*   By: ael-bakk <ael-bakk@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/02 17:11:40 by ael-bakk          #+#    #+#             */
-/*   Updated: 2026/04/02 21:33:17 by ael-bakk         ###   ########.fr       */
+/*   Updated: 2026/04/03 11:14:15 by ael-bakk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,8 @@ static int	check_burnout(t_sim *sim, int *out_id)
 		pthread_mutex_lock(&sim->coders[i].state_mtx);
 		last = sim->coders[i].last_compile_start_ms;
 		done = (sim->params.must_compile_count > 0
-				&& sim->coders[i].compile_count >= sim->params.must_compile_count);
+				&& sim->coders[i].compile_count
+				>= sim->params.must_compile_count);
 		pthread_mutex_unlock(&sim->coders[i].state_mtx);
 		if (!done && now - last >= sim->params.t_burnout)
 		{
