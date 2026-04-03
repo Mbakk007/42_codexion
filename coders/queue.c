@@ -6,24 +6,11 @@
 /*   By: ael-bakk <ael-bakk@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/02 17:53:23 by ael-bakk          #+#    #+#             */
-/*   Updated: 2026/04/02 21:33:20 by ael-bakk         ###   ########.fr       */
+/*   Updated: 2026/04/03 10:40:18 by ael-bakk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "codexion.h"
-
-int	queue_init(t_sim *sim)
-{
-	sim->queue = malloc(sizeof(t_queue));
-	if (!sim->queue)
-		return (0);
-	sim->queue->requests = malloc(sizeof(t_request) * sim->params.n_coders);
-	if (!sim->queue->requests)
-		return (free(sim->queue), sim->queue = NULL, 0);
-	sim->queue->len = 0;
-	sim->queue->cap = sim->params.n_coders;
-	return (1);
-}
 
 void	queue_destroy(t_sim *sim)
 {

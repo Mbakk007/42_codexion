@@ -6,7 +6,7 @@
 /*   By: ael-bakk <ael-bakk@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/01 10:53:32 by ael-bakk          #+#    #+#             */
-/*   Updated: 2026/04/02 21:32:58 by ael-bakk         ###   ########.fr       */
+/*   Updated: 2026/04/03 10:09:10 by ael-bakk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,37 +28,41 @@ static int	coder_cycle(t_coder *c)
 {
 	if (!dongles_take_two(c))
 		return (0);
-	if (sim_should_stop(c->sim) || reached_quota(c))
-		return (dongles_release_two(c), 0);
+	if (sim_should_stop(c->sim))
+	{
+		dongles_release_two(c);
+		return (0);
+	}
 	pthread_mutex_lock(&c->state_mtx);
 	c->last_compile_start_ms = sim_time_ms(c->sim);
 	pthread_mutex_unlock(&c->state_mtx);
 	log_event(c->sim, c->id, "is compiling");
 	ms_sleep(c->sim, c->sim->params.t_compile);
-	pthread_mutex_lock(&c->state_mtx);
-	c->compile_count++;
-	pthread_mutex_unlock(&c->state_mtx);
 	dongles_release_two(c);
-	if (sim_should_stop(c->sim) || reached_quota(c))
+	if (sim_should_stop(c->sim))
 		return (0);
 	log_event(c->sim, c->id, "is debugging");
 	ms_sleep(c->sim, c->sim->params.t_debug);
-	if (sim_should_stop(c->sim) || reached_quota(c))
+	if (sim_should_stop(c->sim))
 		return (0);
 	log_event(c->sim, c->id, "is refactoring");
+	pthread_mutex_lock(&c->state_mtx);
+	c->compile_count++;
+	pthread_mutex_unlock(&c->state_mtx);
 	ms_sleep(c->sim, c->sim->params.t_refactor);
 	return (1);
 }
 
 void	*coder_routine(void *arg)
 {
-	t_coder *c;
+	t_coder	*c = (t_coder *)arg;
 
-	c = (t_coder *)arg;
-	while (!sim_should_stop(c->sim) && !reached_quota(c))
+	while (!sim_should_stop(c->sim))
 	{
-		if (!coder_cycle(c))
-			break ;
+    	if (!coder_cycle(c))
+        	break ;
+    	if (reached_quota(c))
+        	break ;
 	}
 	return (NULL);
 }

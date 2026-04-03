@@ -6,7 +6,7 @@
 /*   By: ael-bakk <ael-bakk@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/21 17:40:36 by ael-bakk          #+#    #+#             */
-/*   Updated: 2026/04/02 21:33:01 by ael-bakk         ###   ########.fr       */
+/*   Updated: 2026/04/03 10:39:48 by ael-bakk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -128,22 +128,22 @@ void					sim_free(t_sim *sim);
 // init.c
 int						sim_resources_init(t_sim *sim);
 void					sim_resources_destroy(t_sim *sim);
+int						dongles_init(t_sim *sim);
+int						scheduler_init(t_sim *sim);
+int						queue_init(t_sim *sim);
 
 // queue.c
-int						queue_init(t_sim *sim);
 void					queue_destroy(t_sim *sim);
 int						queue_push(t_sim *sim, int coder_id);
 void					queue_remove(t_sim *sim, int coder_id);
 int						queue_pick_winner(t_sim *sim);
 
 // dongle.c
-int						dongles_init(t_sim *sim);
 void					dongles_destroy(t_sim *sim);
 int						dongles_take_two(t_coder *c);
 void					dongles_release_two(t_coder *c);
 
 // scheduler.c
-int						scheduler_init(t_sim *sim);
 void					scheduler_destroy(t_sim *sim);
 long					scheduler_key_ms(t_sim *sim, int coder_id,
 							long arrival_ms);
