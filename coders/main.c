@@ -6,7 +6,7 @@
 /*   By: ael-bakk <ael-bakk@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/02 15:17:50 by ael-bakk          #+#    #+#             */
-/*   Updated: 2026/04/04 23:49:37 by ael-bakk         ###   ########.fr       */
+/*   Updated: 2026/04/08 16:26:44 by ael-bakk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ int	main(int argc, char **argv)
 	t_sim		sim;
 
 	if (argc != 9)
-		return (print_error(), 1);
+		return (print_usage(), 1);
 	if (!parse_args(&p, argc, argv))
 		return (print_error(), 1);
 	if (!sim_init(&sim, &p))

@@ -6,7 +6,7 @@
 /*   By: ael-bakk <ael-bakk@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/22 11:03:45 by ael-bakk          #+#    #+#             */
-/*   Updated: 2026/04/05 00:24:28 by ael-bakk         ###   ########.fr       */
+/*   Updated: 2026/04/09 09:43:17 by ael-bakk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,7 @@ int	parse_args(t_params *p, int argc, char **argv)
 {
 	if (argc != 9)
 		return (0);
-	if (!parse_pos_long(&p->n_coders, argv[1]))
+	if (!parse_pos_long((long *)&p->n_coders, argv[1]))
 		return (0);
 	if (!parse_pos_long(&p->t_burnout, argv[2]))
 		return (0);

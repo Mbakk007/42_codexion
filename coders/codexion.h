@@ -6,7 +6,7 @@
 /*   By: ael-bakk <ael-bakk@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/21 17:40:36 by ael-bakk          #+#    #+#             */
-/*   Updated: 2026/04/05 00:25:43 by ael-bakk         ###   ########.fr       */
+/*   Updated: 2026/04/15 19:29:14 by ael-bakk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -136,6 +136,13 @@ int						queue_pick_winner(t_sim *sim);
 void					dongles_destroy(t_sim *sim);
 int						dongles_take_two(t_coder *c);
 void					dongles_release_two(t_coder *c);
+void					wait_until(t_coder *c, long min_avail,
+							struct timespec *ts);
+
+// dongle_utils.c
+long					try_take_dongles(t_coder *c);
+long					try_take_one(t_coder *c, int idx);
+long					try_take_two(t_coder *c, int left, int right);
 
 // scheduler.c
 void					scheduler_destroy(t_sim *sim);

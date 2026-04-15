@@ -17,7 +17,8 @@ SRCS := \
 	coders/monitor.c \
 	coders/utils.c \
 	coders/sim.c \
-	coders/sim_alloc.c
+	coders/sim_alloc.c \
+	coders/dongle_utils.c
 
 OBJS := $(SRCS:.c=.o)
 
